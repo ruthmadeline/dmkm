@@ -1,0 +1,117 @@
+---
+title: "UTS DMKM"
+author: "Ruth"
+date: "27/10/2020"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readxl)
+dmkm <- read_excel("C:/Users/rutek/Desktop/dmkm.xlsx")
+```
+## Prediksi ISE
+```{r}
+library(caTools)
+set.seed(123)
+split=sample.split(dmkm$ISE...2, SplitRatio=4/5)
+training_set=subset(dmkm, split==TRUE)
+test_set=subset(dmkm, split==FALSE)
+regressor=lm(formula=ISE...2~date,
+             data = training_set)
+summary(regressor)
+y_pred=predict(regressor, newdata=test_set)
+y_pred
+```
+## Visualisasi Prediksi training set ISE
+```{r }
+library(ggplot2)
+ggplot()+
+geom_point(aes(x=training_set$date, y= training_set$ISE...2),
+          colour = 'red')+
+geom_line(aes(x=training_set$date, y=predict(regressor, newdata = training_set)),
+          colour='blue')+
+ggtitle('ISE vs Date (Training set)')+
+xlab('Date')+
+ylab('ISE')
+```
+
+## Prediksi SP
+```{r}
+set.seed(123)
+split=sample.split(dmkm$SP, SplitRatio=4/5)
+training_set=subset(dmkm, split==TRUE)
+test_set=subset(dmkm, split==FALSE)
+regressor=lm(formula=SP~date,
+             data = training_set)
+summary(regressor)
+y_pred=predict(regressor, newdata=test_set)
+y_pred
+```
+## Visualisasi Prediksi training set SP
+```{r}
+library(ggplot2)
+ggplot()+
+geom_point(aes(x=training_set$date, y= training_set$SP),
+          colour = 'red')+
+geom_line(aes(x=training_set$date, y=predict(regressor, newdata = training_set)),
+          colour='blue')+
+ggtitle('SP vs Date (Training set)')+
+xlab('Date')+
+ylab('SP')
+```
+
+```{r}
+library(caTools)
+set.seed(123)
+split=sample.split(dmkm$DAX, SplitRatio=4/5)
+training_set=subset(dmkm, split==TRUE)
+test_set=subset(dmkm, split==FALSE)
+regressor=lm(formula=DAX~date,
+             data = training_set)
+summary(regressor)
+y_pred=predict(regressor, newdata=test_set)
+y_pred
+```
+## Visualisasi Prediksi training set ISE
+```{r}
+library(ggplot2)
+ggplot()+
+geom_point(aes(x=training_set$date, y= training_set$DAX),
+          colour = 'red')+
+geom_line(aes(x=training_set$date, y=predict(regressor, newdata = training_set)),
+          colour='blue')+
+ggtitle('DAX vs Date (Training set)')+
+xlab('Date')+
+ylab('DAX')
+```
+
+```{r}
+library(caTools)
+set.seed(123)
+split=sample.split(dmkm$FTSE, SplitRatio=4/5)
+training_set=subset(dmkm, split==TRUE)
+test_set=subset(dmkm, split==FALSE)
+regressor=lm(formula=FTSE~date,
+             data = training_set)
+summary(regressor)
+y_pred=predict(regressor, newdata=test_set)
+y_pred
+```
+## Visualisasi Prediksi training set ISE
+```{r}
+library(ggplot2)
+ggplot()+
+geom_point(aes(x=training_set$date, y= training_set$FTSE),
+          colour = 'red')+
+geom_line(aes(x=training_set$date, y=predict(regressor, newdata = training_set)),
+          colour='blue')+
+ggtitle('FTSE vs Date (Training set)')+
+xlab('Date')+
+ylab('FTSE')
+```
+```{r}
+library(psych)
+library(caret)
+confusionMatrix(table(test_set$FTSE, test_set$FTSE))
+```
